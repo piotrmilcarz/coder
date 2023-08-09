@@ -3,8 +3,6 @@ require 'coder'
 module Coder
   module Cleaner
     class Builtin
-      OPTIONS = { :undef => :replace, :invalid => :replace, :replace => "" }
-
       def self.available?
         has_encoding? and mri?
       end
@@ -36,7 +34,7 @@ module Coder
 
       def clean(str)
         str = str.dup.force_encoding(@encoding)
-        str.encode(@dummy, OPTIONS).encode(@encoding).gsub("\0".encode(@encoding), "")
+        str.encode(@dummy, :undef => :replace, :invalid => :replace, :replace => "").encode(@encoding).gsub("\0".encode(@encoding), "")
       rescue EncodingError => e
         raise Coder::Error, e.message
       end
